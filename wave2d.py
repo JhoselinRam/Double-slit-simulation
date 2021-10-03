@@ -3,18 +3,18 @@ from numpy.lib.stride_tricks import sliding_window_view
 from numpy.lib.twodim_base import mask_indices
 
 class wave2d():
-    def __init__(self, width, height, dx, dy, dt, speed):
-        self.widht  = width     #Lenght of the domain in the 'x' direction in meters
-        self.height = height    #lenght of the domain in the 'y' direction in meters
+    def __init__(self, xNodes, yNodes, dx, dy, dt, speed):
+        self.xNodes  = xNodes   #Number of nodes in the 'x' direction
+        self.yNodes = yNodes    #Number of nodes in the 'y' direction
         self.dx     = dx        #Size of the spatial increment in the 'x' direction in meters
         self.dy     = dy        #Size of the spatial increment in the 'y' direction in meters
         self.dt     = dt        #Size of the temporal increment in seconds
         self.speed  = speed     #Speed of the wave in meters/second
 
-        self.field     = np.zeros(shape=(3, int(width/dx), int(height/dy)), dtype="float64")     #The actual wave, solution of the equation
-        self.obstacle  = np.ones(shape=(self.field.shape), dtype="float64")                      #Obstacle inside the domain.
-        self.mask      = self.obstacle.copy()                                                    #Same as the obstacle, needed for visualisation
-        self._boundary = None                                                                    #No default boundary conditions. This must be a function given by the user
+        self.field     = np.zeros(shape=(3, xNodes, yNodes), dtype="float64")       #The actual wave, solution of the equation
+        self.obstacle  = np.ones(shape=(self.field.shape), dtype="float64")         #Obstacle inside the domain.
+        self.mask      = self.obstacle.copy()                                       #Same as the obstacle, needed for visualisation
+        self._boundary = None                                                       #No default boundary conditions. This must be a function given by the user
 
         self.screenOn   = False   #No default screen
         self.screen     = None
@@ -34,15 +34,15 @@ class wave2d():
 
 
     def setScreenAt(self, size, xPosition, yPosition, alignment=0):
-        self.screenOn   = True                                        #Set the use of the screen
-        self.screenXpos = int((self.widht/self.dx - 1)*xPosition)     #Set the 'x' position of the screen center, xPosition is relative to the total width of the domain [0,1]
-        self.screenYpos = int((self.height/self.dy - 1)*yPosition)    #Set the 'y' position of the screen center, yPosition is relative to the total height of the domain [0,1]
-        self.screenAlignment = alignment                              #0 - Vertical screen.   1 - Horizontal screen
+        self.screenOn   = True                            #Set the use of the screen
+        self.screenXpos = (self.xNodes - 1)*xPosition     #Set the 'x' position of the screen center, xPosition is relative to the total width of the domain [0,1]
+        self.screenYpos = (self.yNodes - 1)*yPosition     #Set the 'y' position of the screen center, yPosition is relative to the total height of the domain [0,1]
+        self.screenAlignment = alignment                  #0 - Vertical screen.   1 - Horizontal screen
 
         if(alignment == 0): #Set the absolute size of the screeen given the alignment [0,1]
-            self.screen = np.zeros(shape=(int(self.height/self.dy*size)), dtype="float64")
+            self.screen = np.zeros(shape=(self.yNodes*size), dtype="float64")
         elif(alignment == 1):
-            self.screen = np.zeros(shape=(int(self.widht/self.dx*size)), dtype="float64")
+            self.screen = np.zeros(shape=(self.xNodes*size), dtype="float64")
 
 
     def getScreen(self):
@@ -81,6 +81,3 @@ class wave2d():
         self._boundary(*boundaryArgs)           #Aplies the boundary condition
         self.field[0,:,:] = self.field[1,:,:]   #Update the last time interval for the next iteration
         self.field[1,:,:] = self.field[2,:,:]   #Update the second last time interval for the next iteration
-
-
-
