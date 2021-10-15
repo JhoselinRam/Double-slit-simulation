@@ -24,6 +24,8 @@ def main():
     slitThickness  = 0.001      #Thickness of the double slit
     slitAperture   = 0.006      #Aperture of the slits
 
+    colorCap = 0.195        #Proportion of the wave maximum value at the screen with respect to the pulse amplitude, used to trim the color map and the 'y' axis in the screen graph
+
 #Screen parameters expressed in proportion of the width and height of the domain [0,1]
     screenXPosition = 0.7       #'x' position of the screen
     screenYPosition = 0.5       #'y' position of the screen
@@ -37,7 +39,6 @@ def main():
     yNodes = int(height/(np.sqrt(2)*speed*dt)) - 1      #Number of nodes in the 'y' direction. Uses the stability condition to avoid "blow to infinity" scenarios
     dx = width/xNodes       #Increment in the 'x' direction in meters
     dy = height/yNodes      #Increment in the 'y' direction in meters
-    colorCap = 0.195        #Proportion of the wave maximum value at the screen with respect to the pulse amplitude, used to trim the color map and the 'y' axis in the screen graph
 #---------------------------------------------------------------------------------------
 
 #---------------------------------------- Setup ----------------------------------------
