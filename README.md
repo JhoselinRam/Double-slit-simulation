@@ -9,3 +9,5 @@ You can edit the parameters of the simulation by changing the values of the 'edi
 > Lines 9 to 35
 
 The animation can be store in  a `.mp4` file. To do that, uncomment lines `86` and `87`, the name of the final file can be edited.
+___
+An example of the simulation can be seen [here](https://www.youtube.com/watch?v=0NEpMBgNIko)
